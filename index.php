@@ -7,6 +7,8 @@
  */
 
 $tasks = array("a_example.txt"/*, "b_lovely_landscapes.txt", "c_memorable_moments.txt", "d_pet_pictures.txt", "e_shiny_selfies.txt"*/);
+$elements = [];
+$tag_num = [];
 foreach($tasks as $task) {
     $task_elements = array();
     $task_file = fopen("tasks/" . $task, "r+") or die("Unable to open file!");
@@ -16,6 +18,19 @@ foreach($tasks as $task) {
     }
     $iteration = 0;
     $amount_of_photos = 0;
+
+    function maxVal($arr) {
+        //$max = array_keys($arr, max($arr["amount_of_tags"]));
+        //$max = array_keys($arr, max(array_column($var, "amount_of_tags")));
+        foreach ($arr as $value) {
+            global $tag_num;
+            array_push($tag_num, $value["amount_of_tags"]);
+        }
+        global $tag_num;
+        $max_tagNum = array_keys($tag_num, max($tag_num));
+        return $max_tagNum;
+    }
+
     foreach($task_array as $task_array_element) {
         if($iteration === 0) {
             $amount_of_photos = intval($task_array);
@@ -26,12 +41,16 @@ foreach($tasks as $task) {
             $task_element["amount_of_tags"] = intval($task_array_element[1]);
             $task_element["tags"] = $task_array_element[2];
             $task_element["tags"] = explode(" ", $task_element["tags"]);
-            array_push($task_elements, $task_element);
-            var_dump($task_element);
-            echo "<br />";
+            array_push($elements, $task_element);
+            //var_dump($task_element);
+            //
+            //echo(maxVal($task_element));
+            //echo "<br />";
         }
     }
-    var_dump($task_elements);
+
+    var_dump($elements);
+    var_dump(maxVal($elements));
 
     $submission = fopen("submition.txt", "w+") or die("Unable to open file!");
     $txt = "3\n0\n3\n1 2\n";
@@ -39,4 +58,3 @@ foreach($tasks as $task) {
     fclose($submission);
     fclose($task_file);
 }
-?>
