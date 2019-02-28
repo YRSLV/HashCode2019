@@ -8,6 +8,7 @@
 
 $tasks = array("a_example.txt"/*, "b_lovely_landscapes.txt", "c_memorable_moments.txt", "d_pet_pictures.txt", "e_shiny_selfies.txt"*/);
 foreach($tasks as $task) {
+    $task_elements = array();
     $task_file = fopen("tasks/" . $task, "r+") or die("Unable to open file!");
     $task_array = array();
     while (($buffer = fgets($task_file)) !== false) {
@@ -25,12 +26,12 @@ foreach($tasks as $task) {
             $task_element["amount_of_tags"] = intval($task_array_element[1]);
             $task_element["tags"] = $task_array_element[2];
             $task_element["tags"] = explode(" ", $task_element["tags"]);
+            array_push($task_elements, $task_element);
             var_dump($task_element);
             echo "<br />";
         }
     }
-
-    $
+    var_dump($task_elements);
 
     $submission = fopen("submition.txt", "w+") or die("Unable to open file!");
     $txt = "3\n0\n3\n1 2\n";
