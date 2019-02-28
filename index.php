@@ -7,10 +7,6 @@
  */
 
 $submission = fopen("sub.txt", "w") or die("Unable to open file!");
-$txt = "3
-0
-3
-1 2
-";
+$txt = "3\n0\n3\n1 2\n";
 fwrite($submission, $txt);
 fclose($submission);
