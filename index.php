@@ -87,13 +87,15 @@ foreach($tasks as $task) {
         var_dump($task_elements);
         echo "<br />";
         echo "<br />";
-        $Slide_id = maxVal($task_elements, "V");
-        unset($task_elements[$Slide_id]);
-        $txt .= $Slide_id . " ";
-        $Slide_id = maxVal($task_elements, "V");
-        unset($task_elements[$Slide_id]);
-        $txt .= $Slide_id . "\n";
-        $amount_of_slides++;
+        if($task_elements != NULL) {
+            $Slide_id = maxVal($task_elements, "V");
+            unset($task_elements[$Slide_id]);
+            $txt .= $Slide_id . " ";
+            $Slide_id = maxVal($task_elements, "V");
+            unset($task_elements[$Slide_id]);
+            $txt .= $Slide_id . "\n";
+            $amount_of_slides++;
+        }
     }
 
     /*var_dump($task_elements);
