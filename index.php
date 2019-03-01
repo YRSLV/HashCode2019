@@ -5,8 +5,14 @@
  * Date: 2/28/2019
  * Time: 8:10 PM
  */
+ini_set('memory_limit', '-1');
+ini_set('max_execution_time', 900);
 
-$tasks = array("a_example.txt"/*, "b_lovely_landscapes.txt", "c_memorable_moments.txt", "d_pet_pictures.txt", "e_shiny_selfies.txt"*/);
+$tasks = array(//"a_example.txt", 
+                "b_lovely_landscapes.txt"/*, 
+                "c_memorable_moments.txt", 
+                "d_pet_pictures.txt", 
+                "e_shiny_selfies.txt"*/);
 // $task_H_elements = array();
 // $task_V_elements = array();
 $task_elements = array();
@@ -18,7 +24,7 @@ $txt = "";
 foreach($tasks as $task) {
     $task_file = fopen("tasks/" . $task, "r+") or die("Unable to open file!");
     $task_array = array();
-    while (($buffer = fgets($task_file)) !== false) {
+    while (($buffer = fgets($task_file, 8192)) !== false) {
         array_push($task_array, $buffer);
     }
     $iteration = 0;
@@ -28,26 +34,29 @@ foreach($tasks as $task) {
         $tag_num = array();
         $max_tags = 0;
         $max_key = 0;
+        // echo $orientation . ": ";
         foreach ($arr as $key => $value) {
             if($value["orientation"] === $orientation) {
                 // array_push($tag_num, $value["amount_of_tags"]);
                 if($value["amount_of_tags"] >= $max_tags) {
                     $max_tags = $value["amount_of_tags"];
                     $max_key = $key;
+                    // echo $key . " ";
                 }
             }
         }
+        // echo "<br />";
         // $max_tagNum = array_keys($tag_num, max($tag_num));
         // echo $max_tagNum[0] . "<br />";
         // return $max_tagNum[0];
-        return $key;
+        return $max_key;
     }
 
     function CheckOrientation($element) {
         if($element["orientation"] === "H") {
             return "H";
         } else {
-            return 1;
+            return "V";
         }
     }
 
@@ -76,27 +85,42 @@ foreach($tasks as $task) {
         }
     }
 
-    var_dump($task_elements);
-    echo "<br />";
-    echo "<br />";
+    // var_dump($task_elements);
+    // echo "<br />";
+    // echo "<br />";
+    $iteration = 0;
     while($task_elements != NULL) {
+        $iteration++;
+        // var_dump($task_elements);
+        // echo "<br />";
         $Slide_id = maxVal($task_elements);
+        // echo "slide: $iteration is $Slide_id" . "<br />";
         unset($task_elements[$Slide_id]);
+        // array_push($slides, strval($Slide_id));
         $txt .= $Slide_id . "\n";
         $amount_of_slides++;
-        var_dump($task_elements);
-        echo "<br />";
-        echo "<br />";
+        // echo "<br />";
         if($task_elements != NULL) {
-            $Slide_id = maxVal($task_elements, "V");
-            unset($task_elements[$Slide_id]);
-            $txt .= $Slide_id . " ";
-            $Slide_id = maxVal($task_elements, "V");
-            unset($task_elements[$Slide_id]);
-            $txt .= $Slide_id . "\n";
-            $amount_of_slides++;
+            // var_dump($task_elements);
+            // echo "<br />";
+            $Slide_id_1 = maxVal($task_elements, "V");
+            unset($task_elements[$Slide_id_1]);
+            // var_dump($task_elements);
+            // echo "<br />";
+            $Slide_id_2 = maxVal($task_elements, "V");
+            unset($task_elements[$Slide_id_2]);
+            if($Slide_id_1 != $Slide_id_2) {
+                $iteration++;
+                // echo "slide: $iteration is $Slide_id_1, $Slide_id_2" . "<br />";
+                $txt .= $Slide_id_1 . " ";
+                $txt .= $Slide_id_2 . "\n";
+                $amount_of_slides++;
+                // echo "<br />";
+            }
         }
     }
+    $txt = $amount_of_slides . "\n" . $txt;
+    echo "succes";
 
     /*var_dump($task_elements);
     echo "<br />";
@@ -125,7 +149,6 @@ foreach($tasks as $task) {
     */
 
     $submission = fopen("submition.txt", "w+") or die("Unable to open file!");
-    //$txt = "3\n0\n3\n1 2\n";
     fwrite($submission, $txt);
     fclose($submission);
     fclose($task_file);
