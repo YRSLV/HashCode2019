@@ -8,9 +8,11 @@
 ini_set('memory_limit', '-1');
 ini_set('max_execution_time', 900);
 
+$rustart = getrusage();
+
 $tasks = array(//"a_example.txt", 
-                "b_lovely_landscapes.txt"/*, 
-                "c_memorable_moments.txt", 
+                //"b_lovely_landscapes.txt",
+                "c_memorable_moments.txt"/*,
                 "d_pet_pictures.txt", 
                 "e_shiny_selfies.txt"*/);
 // $task_H_elements = array();
@@ -152,4 +154,15 @@ foreach($tasks as $task) {
     fwrite($submission, $txt);
     fclose($submission);
     fclose($task_file);
+
+    function runtime($ru, $rus, $index) {
+        return ($ru["ru_$index.tv_sec"]*1000 + intval($ru["ru_$index.tv_usec"]/1000))
+            -  ($rus["ru_$index.tv_sec"]*1000 + intval($rus["ru_$index.tv_usec"]/1000));
+    }
+
+    $ru = getrusage();
+    echo "This process used " . runtime($ru, $rustart, "utime") .
+        " ms for its computations\n";
+    echo "It spent " . runtime($ru, $rustart, "stime") .
+        " ms in system calls\n";
 }
